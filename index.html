@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <script type="text/javascript" src="js/faye-browser-min.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      var client = new Faye.Client('http://localhost:9292/faye');
+      Faye.logger = window.console
+      client.addExtension({
+        outgoing: function(message, callback) {
+          if (message.channel == '/meta/subscribe') {
+            // Attach the signature to subscription messages.
+            message.ext = { signature: 'X' }
+          }
+          callback(message);
+        }
+      });
+      var subscription = client.subscribe('/foo', function(message) {
+        console.log('Message received: ', message);
+      }).then(function() {
+        console.log('Subscription succeeded.');
+      }, function() {
+        console.log('Subscription failed.');
+      });
+
+    </script>
+  </body>
+</html>
