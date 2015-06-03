@@ -1,0 +1,1 @@
+# faye-invalid-subscription
